@@ -1,0 +1,85 @@
+
+# define your veriables and temp veriables here
+	.text
+	.bss
+	.globl	a
+	.align	4
+	.type	a, @object
+a:
+	.zero	4
+	.globl	b
+	.align	4
+	.type	b, @object
+b:
+	.zero	4
+	.globl	c
+	.align	4
+	.type	c, @object
+c:
+	.zero	4
+	.globl	d
+	.align	4
+	.type	d, @object
+d:
+	.zero	4
+	.globl	t0
+	.align	4
+t0:
+	.zero	4
+
+	.section	.rodata
+STR0:
+	.string "%d\n"
+
+
+# your asm code here
+	.text
+	.globl main
+	.type main, @function
+main:
+	leal 4(%esp), %ecx
+	andl $-16, %esp
+	pushl -4(%ecx)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ecx
+	subl $4, %esp
+	xorl %eax, %eax
+	xorl %edx, %edx
+	movl $16, %eax
+	movl %eax, a
+	xorl %eax, %eax
+	xorl %edx, %edx
+	movl $2, %eax
+	movl %eax, b
+	xorl %eax, %eax
+	xorl %edx, %edx
+	movl $30, %eax
+	movl %eax, c
+	xorl %eax, %eax
+	xorl %edx, %edx
+	movl b, %eax
+	imull c, %eax
+	movl %eax, t0
+	xorl %eax, %eax
+	xorl %edx, %edx
+	movl a, %eax
+	addl t0, %eax
+	movl %eax, t0
+	xorl %eax, %eax
+	xorl %edx, %edx
+	movl t0, %eax
+	movl %eax, d
+	subl $8, %esp
+	xorl %eax,%eax
+	movl d, %eax
+	pushl %eax
+	pushl $STR0
+	call printf
+	addl $16, %esp
+	movl $0, %eax
+	movl -4(%ebp), %ecx
+	leave
+	leal -4(%ecx), %esp
+	ret
+	.section  .note.GNU-stack,"",@progbits
